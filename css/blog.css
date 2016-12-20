@@ -14,52 +14,23 @@
 	border-bottom: solid 1px #ddd;
 }
 
-#announcement_submit_msg.success {
-	color: #fff;
-	background-color: #47a447;
-	border-radius: 3px;
-	padding: 3px;
-}
-#announcement_submit_msg.error {
-	color: #fff;
-	background-color: #d2322d;
-	border-radius: 3px;
-	padding: 3px;
-}
-
 .emptycontent-admin {
 	position: inherit !important;
 	margin-top: 50px !important;
 }
 
-.announcementcenter .visibility img,
-.announcementcenter .delete-link img,
-.announcementcenter .mute-link img {
+.blog .delete-link img {
 	width: 16px;
 	vertical-align: middle;
 	padding-bottom: 3px;
 }
 
-.announcementcenter .delete-link,
-.announcementcenter .mute-link {
+.blog .delete-link {
 	display: none;
 }
 
-.announcementcenter .section:hover .delete-link,
-.announcementcenter .section:hover .mute-link {
+.blog .section:hover .delete-link {
 	display: inline;
-}
-
-#app-sidebar .tab {
-	padding: 15px
-}
-
-#app input[type="text"] {
-	box-sizing: content-box;
-}
-
-.icon-announcement {
-	background-image: url('../img/announcementcenter-dark.svg');
 }
 
 .section > span {

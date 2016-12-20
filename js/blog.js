@@ -23,29 +23,19 @@
 
 		_compiledTemplate: null,
 		_handlebarTemplate: '<div class="section" data-blog-id="{{id}}">' +
-				'<h2>{{{subject}}}</h2>' +
-					'<span class="has-tooltip live-relative-timestamp" data-timestamp="{{timestamp}}" title="{{dateFormat}}">{{dateRelative}}</span>' +
-					'<span>{{{author}}}</span>' +
-					// '{{#if comments}}' +
-					// 	'<span class="comment-details" data-count="{{num_comments}}">{{comments}}</span>' +
-					// '{{/if}}' +
-					// '{{#if isAdmin}}' +
-					// 	'<span class="delete-link has-tooltip" title="' + t('announcementcenter', 'Delete') + '">' +
-					// 		'<a href="#" data-announcement-id="{{{announcementId}}}">' +
-					// 			'<img class="svg" src="' + OC.imagePath('core', 'actions/delete') + '" alt=""/>' +
-					// 		'</a>' +
-					// 	'</span>' +
-					// 	'{{#if hasNotifications}}' +
-					// 	'<span class="mute-link has-tooltip" title="' + t('announcementcenter', 'Remove notifications') + '">' +
-					// 		'<a href="#" data-announcement-id="{{{announcementId}}}">' +
-					// 			'<img class="svg" src="' + OC.imagePath('announcementcenter', 'notifications-off.svg') + '" alt=""/>' +
-					// 		'</a>' +
-					// 	'</span>' +
-					// 	'{{/if}}' +
-					// '{{/if}}' +
-					'<br /><br /><p>{{{text}}}</p>' +
-			'</div>' +
-			'<hr />',
+		'<h2>{{subject}}</h2>' +
+		'<span class="has-tooltip live-relative-timestamp" data-timestamp="{{timestamp}}" title="{{dateFormat}}">{{dateRelative}}</span>' +
+		'<span>{{author}}</span>' +
+		'{{#if isAuthor}}' +
+		'<span class="delete-link has-tooltip" title="' + t('blog', 'Delete') + '">' +
+		'<a href="#">' +
+		'<img class="svg" src="' + OC.imagePath('core', 'actions/delete') + '" alt=""/>' +
+		'</a>' +
+		'</span>' +
+		'{{/if}}' +
+		'<div class="text">{{text}}</div>' +
+		'</div>' +
+		'<hr />',
 
 		init: function() {
 			this.$container = $('#app-content-wrapper');
@@ -71,9 +61,10 @@
 		_formatItem: function(post) {
 			return {
 				id: post.get('id'),
-				author: post.get('user'),
+				author: post.get('displayName'),
+				isAuthor: post.get('user') === oc_current_user,
 				subject: post.get('subject'),
-				text: post.get('text'),
+				text: post.get('text'), // TODO parse markdown
 				dateRelative: post.getRelativeDate(),
 				dateFormat: post.getFullDate(),
 				timestamp: post.getUnixMilliseconds()

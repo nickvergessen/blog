@@ -115,6 +115,11 @@ class ApiController extends Controller {
 		$post->setSlug($this->slugify($subject));
 		$post->setText($text);
 		$post->setDate(new \DateTime());
+
+		if ($post->getSlug() === '') {
+			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
+		}
+
 		$this->postMapper->insert($post);
 
 		return new JSONResponse($this->postToArray($post));
@@ -152,7 +157,7 @@ class ApiController extends Controller {
 		$string = str_replace(['ö', 'ä', 'ü', 'ß'], ['oe', 'ae', 'ue', 'ss'], $string);
 		$string = preg_replace('/[^a-z0-9]+/', '-', $string);
 		$string = preg_replace('/-{2,}/', '-', $string);
-		return $string;
+		return trim($string, '-');
 	}
 
 
@@ -164,7 +169,8 @@ class ApiController extends Controller {
 		return [
 			'id' => $post->getId(),
 			'blog' => $post->getBlog(),
-			'user' => $this->getDisplayName($post->getUser()),
+			'user' => $post->getUser(),
+			'displayName' => $this->getDisplayName($post->getUser()),
 			'date' => $post->getDate(),
 			'subject' => $post->getSubject(),
 			'slug' => $post->getSlug(),
