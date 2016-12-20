@@ -31,6 +31,8 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Controller;
 use OCP\IL10N;
 use OCP\IRequest;
+use OCP\IUser;
+use OCP\IUserManager;
 use OCP\IUserSession;
 
 class ApiController extends Controller {
@@ -41,25 +43,34 @@ class ApiController extends Controller {
 	/** @var PostMapper */
 	protected $postMapper;
 
+	/** @var IUserManager */
+	protected $userManager;
+
 	/** @var IUserSession */
 	protected $userSession;
+
+	/** @var string[] */
+	protected $displayNames;
 
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
 	 * @param IL10N $l
 	 * @param PostMapper $postMapper
+	 * @param IUserManager $userManager
 	 * @param IUserSession $userSession
 	 */
 	public function __construct($appName,
 								IRequest $request,
 								IL10N $l,
 								PostMapper $postMapper,
+								IUserManager $userManager,
 								IUserSession $userSession) {
 		parent::__construct($appName, $request);
 
 		$this->l = $l;
 		$this->postMapper = $postMapper;
+		$this->userManager = $userManager;
 		$this->userSession = $userSession;
 	}
 
@@ -77,7 +88,7 @@ class ApiController extends Controller {
 		}
 
 		$data = array_map(function(Post $post) {
-			return $post->toArray();
+			return $this->postToArray($post);
 		}, $posts);
 
 		return new JSONResponse($data);
@@ -106,7 +117,7 @@ class ApiController extends Controller {
 		$post->setDate(new \DateTime());
 		$this->postMapper->insert($post);
 
-		return new JSONResponse($post->toArray());
+		return new JSONResponse($this->postToArray($post));
 	}
 
 	/**
@@ -142,5 +153,39 @@ class ApiController extends Controller {
 		$string = preg_replace('/[^a-z0-9]+/', '-', $string);
 		$string = preg_replace('/-{2,}/', '-', $string);
 		return $string;
+	}
+
+
+	/**
+	 * @param Post $post
+	 * @return array
+	 */
+	protected function postToArray(Post $post): array {
+		return [
+			'id' => $post->getId(),
+			'blog' => $post->getBlog(),
+			'user' => $this->getDisplayName($post->getUser()),
+			'date' => $post->getDate(),
+			'subject' => $post->getSubject(),
+			'slug' => $post->getSlug(),
+			'text' => $post->getText(),
+		];
+	}
+
+	/**
+	 * @param string $uid
+	 * @return string
+	 */
+	protected function getDisplayName(string $uid): string {
+		if (!isset($this->displayNames[$uid])) {
+			$user = $this->userManager->get($uid);
+			if ($user instanceof IUser) {
+				$this->displayNames[$uid] = $user->getDisplayName();
+			} else {
+				$this->displayNames[$uid] = $uid;
+			}
+		}
+
+		return $this->displayNames[$uid];
 	}
 }

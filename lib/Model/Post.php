@@ -62,15 +62,4 @@ class Post extends Entity {
 	/** @var string */
 	public $text;
 
-	public function toArray(): array {
-		return [
-			'post_id' => $this->getId(),
-			'blog' => $this->getBlog(),
-			'user' => $this->getUser(),
-			'date' => $this->getDate(),
-			'subject' => $this->getSubject(),
-			'slug' => $this->getSlug(),
-			'text' => $this->getText(),
-		];
-	}
 }
