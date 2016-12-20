@@ -22,39 +22,28 @@
 		commentsTabView: null,
 
 		_compiledTemplate: null,
-		_handlebarTemplate: '<div class="section">' +
+		_handlebarTemplate: '<div class="section" data-blog-id="{{id}}">' +
 				'<h2>{{{subject}}}</h2>' +
-				// 	'<span class="has-tooltip live-relative-timestamp" data-timestamp="{{timestamp}}" title="{{dateFormat}}">{{dateRelative}}</span>' +
-				// 	'<span>{{{author}}}</span>' +
-				// 	'{{#if isAdmin}}' +
-				// 		'<span class="visibility has-tooltip" title="{{{visibilityString}}}">' +
-				// 			'{{#if visibilityEveryone}}' +
-				// 				'<img src="' + OC.imagePath('core', 'places/link') + '">' +
-				// 			'{{else}}' +
-				// 				'<img src="' + OC.imagePath('core', 'places/contacts-dark') + '">' +
-				// 			'{{/if}}' +
-				// 		'</span>' +
-				// 	'{{/if}}' +
-				// 	'{{#if comments}}' +
-				// 		'<span class="comment-details" data-count="{{num_comments}}">{{comments}}</span>' +
-				// 	'{{/if}}' +
-				// 	'{{#if isAdmin}}' +
-				// 		'<span class="delete-link has-tooltip" title="' + t('announcementcenter', 'Delete') + '">' +
-				// 			'<a href="#" data-announcement-id="{{{announcementId}}}">' +
-				// 				'<img class="svg" src="' + OC.imagePath('core', 'actions/delete') + '" alt=""/>' +
-				// 			'</a>' +
-				// 		'</span>' +
-				// 		'{{#if hasNotifications}}' +
-				// 		'<span class="mute-link has-tooltip" title="' + t('announcementcenter', 'Remove notifications') + '">' +
-				// 			'<a href="#" data-announcement-id="{{{announcementId}}}">' +
-				// 				'<img class="svg" src="' + OC.imagePath('announcementcenter', 'notifications-off.svg') + '" alt=""/>' +
-				// 			'</a>' +
-				// 		'</span>' +
-				// 		'{{/if}}' +
-				// 	'{{/if}}' +
-				// '{{#if message}}' +
-				// 	'<br /><br /><p>{{{message}}}</p>' +
-				// '{{/if}}' +
+					'<span class="has-tooltip live-relative-timestamp" data-timestamp="{{timestamp}}" title="{{dateFormat}}">{{dateRelative}}</span>' +
+					'<span>{{{author}}}</span>' +
+					// '{{#if comments}}' +
+					// 	'<span class="comment-details" data-count="{{num_comments}}">{{comments}}</span>' +
+					// '{{/if}}' +
+					// '{{#if isAdmin}}' +
+					// 	'<span class="delete-link has-tooltip" title="' + t('announcementcenter', 'Delete') + '">' +
+					// 		'<a href="#" data-announcement-id="{{{announcementId}}}">' +
+					// 			'<img class="svg" src="' + OC.imagePath('core', 'actions/delete') + '" alt=""/>' +
+					// 		'</a>' +
+					// 	'</span>' +
+					// 	'{{#if hasNotifications}}' +
+					// 	'<span class="mute-link has-tooltip" title="' + t('announcementcenter', 'Remove notifications') + '">' +
+					// 		'<a href="#" data-announcement-id="{{{announcementId}}}">' +
+					// 			'<img class="svg" src="' + OC.imagePath('announcementcenter', 'notifications-off.svg') + '" alt=""/>' +
+					// 		'</a>' +
+					// 	'</span>' +
+					// 	'{{/if}}' +
+					// '{{/if}}' +
+					'<br /><br /><p>{{{text}}}</p>' +
 			'</div>' +
 			'<hr />',
 
@@ -65,10 +54,10 @@
 			this.collection = new OCA.Blog.Model.Collection();
 			this.collection.setBlog(oc_current_user);
 
-			// this.collection.on('request', this._onRequest, this);
-			// this.collection.on('sync', this._onEndRequest, this);
-			// this.collection.on('error', this._onError, this);
-			// this.collection.on('add', this._onAddModel, this);
+			this.collection.on('request', this._onRequest, this);
+			this.collection.on('sync', this._onEndRequest, this);
+			this.collection.on('error', this._onError, this);
+			this.collection.on('add', this._onAddModel, this);
 
 			this.collection.reset();
 			this.collection.fetch();
@@ -81,7 +70,13 @@
 		 */
 		_formatItem: function(post) {
 			return {
-				subject: post.get('subject')
+				id: post.get('id'),
+				author: post.get('user'),
+				subject: post.get('subject'),
+				text: post.get('text'),
+				dateRelative: post.getRelativeDate(),
+				dateFormat: post.getFullDate(),
+				timestamp: post.getUnixMilliseconds()
 			};
 		},
 

@@ -6,8 +6,8 @@
 \OCP\Util::addScript('oc-backbone-webdav');
 script('blog', [
 	'blog',
-	'model/collection',
 	'model/post',
+	'model/collection',
 ]);
 style('blog', [
 	'style',
