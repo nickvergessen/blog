@@ -10,8 +10,8 @@ script('blog', [
 	'model/collection',
 ]);
 style('blog', [
-	'style',
-	'comments',
+	'blog',
+	//'comments',
 ]);
 ?>
 
