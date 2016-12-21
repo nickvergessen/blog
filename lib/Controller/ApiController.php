@@ -37,6 +37,8 @@ use OCP\IUserSession;
 
 class ApiController extends Controller {
 
+	const DATE_FORMAT = 'Y-m-d H:i:s';
+
 	/** @var IL10N */
 	protected $l;
 
@@ -114,7 +116,7 @@ class ApiController extends Controller {
 		$post->setSubject($subject);
 		$post->setSlug($this->slugify($subject));
 		$post->setText($text);
-		$post->setDate(new \DateTime());
+		$post->setDate(date(self::DATE_FORMAT));
 
 		if ($post->getSlug() === '') {
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
@@ -166,12 +168,13 @@ class ApiController extends Controller {
 	 * @return array
 	 */
 	protected function postToArray(Post $post): array {
+		$date = \DateTime::createFromFormat(self::DATE_FORMAT, $post->getDate());
 		return [
 			'id' => $post->getId(),
 			'blog' => $post->getBlog(),
 			'user' => $post->getUser(),
 			'displayName' => $this->getDisplayName($post->getUser()),
-			'date' => $post->getDate(),
+			'date' => $date->format('c'),
 			'subject' => $post->getSubject(),
 			'slug' => $post->getSlug(),
 			'text' => $post->getText(),

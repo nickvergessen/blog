@@ -33,8 +33,8 @@ use OCP\AppFramework\Db\Entity;
  * @method string getBlog()
  * @method void setUser(string $user)
  * @method string getUser()
- * @method void setDate(\DateTime $date)
- * @method \DateTime getDate()
+ * @method void setDate(string $date)
+ * @method string getDate()
  * @method void setSubject(string $subject)
  * @method string getSubject()
  * @method void setSlug(string $slug)
@@ -50,7 +50,7 @@ class Post extends Entity {
 	/** @var string */
 	public $user;
 
-	/** @var \DateTime */
+	/** @var string */
 	public $date;
 
 	/** @var string */
