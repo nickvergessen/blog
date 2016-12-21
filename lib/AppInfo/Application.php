@@ -35,8 +35,6 @@ class Application extends App {
 
 	public function register() {
 		$this->registerNavigationEntry();
-		//$this->registerNotificationNotifier();
-		//$this->registerCommentsEntity();
 	}
 
 	protected function registerNavigationEntry() {
@@ -54,31 +52,4 @@ class Application extends App {
 			];
 		});
 	}
-
-//	protected function registerCommentsEntity() {
-//		$this->getContainer()->getServer()->getEventDispatcher()->addListener(CommentsEntityEvent::EVENT_ENTITY, function(CommentsEntityEvent $event) {
-//			$event->addEntityCollection(self::APP_NAME, function($name) {
-//				/** @var Manager $manager */
-//				$manager = $this->getContainer()->query(Manager::class);
-//				try {
-//					$announcement = $manager->getAnnouncement((int) $name);
-//				} catch (\InvalidArgumentException $e) {
-//					return false;
-//				}
-//				return $announcement['comments'] !== false;
-//			});
-//		});
-//	}
-//
-//	protected function registerNotificationNotifier() {
-//		$this->getContainer()->getServer()->getNotificationManager()->registerNotifier(function() {
-//			return $this->getContainer()->query(Notifier::class);
-//		}, function() {
-//			$l = $this->getContainer()->getServer()->getL10NFactory()->get(self::APP_NAME);
-//			return [
-//				'id' => self::APP_NAME,
-//				'name' => $l->t('Blog'),
-//			];
-//		});
-//	}
 }

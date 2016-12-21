@@ -34,14 +34,9 @@ class PageController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
-	 * @param int $blog
 	 * @return TemplateResponse
 	 */
-	public function index($blog = 0): TemplateResponse {
-//		if ($blog) {
-//			$this->manager->markNotificationRead($blog);
-//		}
-
+	public function index(): TemplateResponse {
 		return new TemplateResponse(Application::APP_NAME, 'main');
 	}
 }
