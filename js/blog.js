@@ -13,13 +13,8 @@
 	}
 
 	OCA.Blog.App = {
-		posts: {},
-		ignoreScroll: 0,
 		$container: null,
 		$content: null,
-		lastLoadedPost: 0,
-		sevenDaysMilliseconds: 7 * 24 * 3600 * 1000,
-		commentsTabView: null,
 
 		_compiledTemplate: null,
 		_handlebarTemplate: '<div class="section" data-blog-id="{{id}}">' +
@@ -40,6 +35,7 @@
 		init: function() {
 			this.$container = $('#app-content-wrapper');
 			this.$content = $('#app-content');
+			$('#submit').on('click', _.bind(this._onSubmitNewBlog, this));
 
 			this.collection = new OCA.Blog.Model.Collection();
 			this.collection.setBlog(oc_current_user);
@@ -53,6 +49,15 @@
 			this.collection.fetch();
 		},
 
+		_onSubmitNewBlog: function() {
+			this.collection.create({
+				blog: oc_current_user,
+				subject: $('#subject').val(),
+				text: $('#text').val()
+			}, {
+				at: 0
+			});
+		},
 
 		/**
 		 * @param {OCA.Blog.Model.Post} post
@@ -83,7 +88,7 @@
 			var $el = $(this._template(this._formatItem(model)));
 
 			if (!_.isUndefined(options.at) && collection.length > 1) {
-				this.$container.find('li').eq(options.at).before($el);
+				this.$container.find('div.section').eq(options.at).before($el);
 			} else {
 				this.$container.append($el);
 			}

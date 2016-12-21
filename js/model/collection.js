@@ -70,7 +70,7 @@
 			} else if (this._getMore !== false) {
 				url = this._getMore;
 			} else {
-				return url;
+				return OC.generateUrl('/apps/blog/api/v1') + '/' + this._blog;
 			}
 
 			url += '?' + OC.buildQueryString(query);
