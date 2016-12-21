@@ -3,7 +3,7 @@
  * @var array $_
  * @var \OCP\IL10N $l
  */
-\OCP\Util::addScript('oc-backbone-webdav');
+script('oc-backbone-webdav');
 script('blog', [
 	'blog',
 	'model/post',
@@ -11,7 +11,6 @@ script('blog', [
 ]);
 style('blog', [
 	'blog',
-	//'comments',
 ]);
 ?>
 

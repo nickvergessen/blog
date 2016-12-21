@@ -24,6 +24,7 @@
 return [
 	'routes' => [
 		['name' => 'page#index', 'url' => '/', 'verb' => 'GET'],
+		['name' => 'page#publicPage', 'url' => '/{blog}', 'verb' => 'GET'],
 		['name' => 'api#get', 'url' => '/api/v1/{blog}', 'verb' => 'GET'],
 		['name' => 'api#create', 'url' => '/api/v1/{blog}', 'verb' => 'POST'],
 		['name' => 'api#delete', 'url' => '/api/v1/{blog}/{postId}', 'verb' => 'DELETE'],

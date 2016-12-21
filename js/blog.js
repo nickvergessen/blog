@@ -35,17 +35,19 @@
 		init: function() {
 			this.$container = $('#app-content-wrapper');
 			this.$content = $('#app-content');
-			$('#submit').on('click', _.bind(this._onSubmitNewBlog, this));
 
 			this.collection = new OCA.Blog.Model.Collection();
-			this.collection.setBlog(oc_current_user);
 
-			this.collection.on('request', this._onRequest, this);
-			this.collection.on('sync', this._onEndRequest, this);
-			this.collection.on('error', this._onError, this);
+			if (oc_current_user !== null) {
+				this.collection.setBlog(oc_current_user);
+
+				$('#submit').on('click', _.bind(this._onSubmitNewBlog, this));
+			} else {
+				// Public page
+				this.collection.setBlog($('#app').attr('data-blog'));
+			}
+
 			this.collection.on('add', this._onAddModel, this);
-
-			this.collection.reset();
 			this.collection.fetch();
 		},
 
@@ -67,7 +69,7 @@
 			return {
 				id: post.get('id'),
 				author: post.get('displayName'),
-				isAuthor: post.get('user') === oc_current_user,
+				isAuthor: oc_current_user !== null && post.get('user') === oc_current_user,
 				subject: post.get('subject'),
 				text: post.get('text'), // TODO parse markdown
 				dateRelative: post.getRelativeDate(),
@@ -108,18 +110,6 @@
 			$el.find('.has-tooltip').tooltip({
 				placement: 'bottom'
 			});
-		},
-
-		_onError: function() {
-			console.error('Error while trying to load the blog posts');
-		},
-
-		_onRequest: function() {
-			console.debug('Starting request');
-		},
-
-		_onEndRequest: function() {
-			console.debug('End of request');
 		}
 	};
 

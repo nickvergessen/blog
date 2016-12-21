@@ -24,11 +24,29 @@
 namespace OCA\Blog\Controller;
 
 
+use OC\HintException;
 use OCA\Blog\AppInfo\Application;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Controller;
+use OCP\IRequest;
+use OCP\IUser;
+use OCP\IUserManager;
 
 class PageController extends Controller {
+
+	/** @var IUserManager */
+	protected $userManager;
+
+	/**
+	 * @param string $appName
+	 * @param IRequest $request
+	 * @param IUserManager $userManager
+	 */
+	public function __construct(string $appName, IRequest $request, IUserManager $userManager) {
+		parent::__construct($appName, $request);
+
+		$this->userManager = $userManager;
+	}
 
 	/**
 	 * @NoAdminRequired
@@ -38,5 +56,33 @@ class PageController extends Controller {
 	 */
 	public function index(): TemplateResponse {
 		return new TemplateResponse(Application::APP_NAME, 'main');
+	}
+
+	/**
+	 * @PublicPage
+	 * @NoCSRFRequired
+	 *
+	 * @param string $blog
+	 * @return TemplateResponse
+	 * @throws HintException
+	 */
+	public function publicPage(string $blog): TemplateResponse {
+
+		$user = $this->userManager->get($blog);
+		if (!$user instanceof IUser) {
+			throw new HintException('Blog does not exist');
+		}
+
+		return new TemplateResponse(Application::APP_NAME, 'public', [
+			'blog' => $blog,
+			'name' => $this->getBlogName($user->getDisplayName()),
+		], 'base');
+	}
+
+	protected function getBlogName(string $username): string {
+		if (substr($username, -1) === 's') {
+			return $username . '´ blog'; // TODO translate
+		}
+		return $username . '´s blog'; // TODO translate
 	}
 }

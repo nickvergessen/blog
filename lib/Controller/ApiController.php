@@ -77,7 +77,7 @@ class ApiController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
+	 * @PublicPage
 	 *
 	 * @param string $blog
 	 * @return JSONResponse
